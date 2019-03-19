@@ -12,8 +12,12 @@ public class cars {
         String pathToDataset = args[0];
         int numberOfCars = Integer.parseInt(args[1]);
         String origin = args[2];
+        
+        // add dataset as file
 
         File f = new File (pathToDataset);
+        
+        // create a hashmap of origins to there respective entries in the datset 
 
         Map<String, ArrayList<String>> cars = new HashMap<String, ArrayList<String>>();
         
@@ -25,7 +29,7 @@ public class cars {
         ArrayList<String> europeCars = new ArrayList<String>();
         ArrayList<String> japanCars = new ArrayList<String>();
 
-        // get the data in a input stream and add to hashmap
+        // get the data from the file and add to hashmap
 
         try (BufferedReader in =  new BufferedReader(new FileReader(f))) {
             for (String line; (line = in.readLine()) != null; ) {
@@ -48,6 +52,8 @@ public class cars {
             cars.put(Europe, europeCars);
         }
 
+        // work on actual problem, use the cmd arguments from before
+        
         ArrayList<String> var = cars.get(origin);
         
         double sum = 0.0;
@@ -55,28 +61,29 @@ public class cars {
         double d = 0.0;
         
         for (i = 0; i < var.size(); i++) {
-            Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(var.get(i));
+            Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(var.get(i));  // match for digits
             while (m.find())
-                d = Double.parseDouble(m.group(1));
+                d = Double.parseDouble(m.group(1)); // parse into Double
             sum += d;
         }
 
-        double avg = sum / (i-1);
+        double avg = sum / (i-1);   // compute average value
         int count = 0;
         d = 0.0;
         i = 0;
 
-        System.out.println(avg);
+        System.out.println(avg);    // for debugging purposes
                 
-        while (i < var.size() && i < count) {
-            Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(var.get(i));
+        // run till end of data or till number of cars, whichever comes earlier
+        while (i < var.size() && count < numberOfCars) {
+            Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(var.get(i));    // match for digits
             while (m.find())
-                d = Double.parseDouble(m.group(1));
-            if (d > avg) {
+                d = Double.parseDouble(m.group(1)); // parse into Double
+            if (d > avg) {  // check with average value compited earlier
                 ++count;
                 System.out.println(var.get(i));
             }
-            i++;
+            i++;    // read next line
         }
     }
 }
